@@ -29,7 +29,7 @@ sub _is_module {
     return 1;
 }
 
-sub _load_module {
+sub load_module {
     my ( $self, $module ) = @_;
 
     $module =~ s{::}{/}g;
@@ -38,7 +38,7 @@ sub _load_module {
     require $module;
 }
 
-sub _run_test_method {
+sub run_test_method {
     my ( $self, $class, $method ) = @_;
 
     my ( $read, $write );
@@ -79,7 +79,7 @@ sub _run_test_method {
     }
 }
 
-sub _get_test_metadata {
+sub get_test_metadata {
     my ( $self, $test_module ) = @_;
 
     return Test::Class::Runner::Metadata->new($test_module);
@@ -88,9 +88,9 @@ sub _get_test_metadata {
 sub _run_test_module {
     my ( $self, $test_module ) = @_;
 
-    $self->_load_module($test_module);
+    $self->load_module($test_module);
 
-    my $meta = $self->_get_test_metadata($test_module);
+    my $meta = $self->get_test_metadata($test_module);
     $self->show_tests($meta);
 }
 

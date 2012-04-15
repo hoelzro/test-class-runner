@@ -21,7 +21,7 @@ sub show_tests {
         my $max_method_length = max(map { length() } @methods);
         my $format            = '%-' . $max_method_length . 's - %s' . "\n";
         foreach my $method (sort @methods) {
-            my $result = $self->_run_test_method($class, $method);
+            my $result = $self->run_test_method($class, $method);
 
             if($result->all_passed) {
                 printf $format, $method, "\e[32;1mPASSED\e[0m";
