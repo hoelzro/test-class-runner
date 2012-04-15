@@ -10,6 +10,7 @@ use Carp qw(croak);
 
 use TAP::Harness;
 use Test::Class::Runner::Metadata;
+use Test::Class::Runner::Util qw(load_module);
 
 use namespace::clean;
 
@@ -27,15 +28,6 @@ sub _is_module {
     return 0 if $file_or_module =~ m{/|\\};
     return 0 if $file_or_module =~ /\.(t|pl)$/;
     return 1;
-}
-
-sub load_module {
-    my ( $self, $module ) = @_;
-
-    $module =~ s{::}{/}g;
-    $module .= '.pm';
-
-    require $module;
 }
 
 sub run_test_method {
@@ -90,7 +82,7 @@ sub get_test_metadata {
 sub _run_test_module {
     my ( $self, $test_module ) = @_;
 
-    $self->load_module($test_module);
+    load_module($test_module);
 
     my $meta = $self->get_test_metadata($test_module);
     $self->show_tests($meta);

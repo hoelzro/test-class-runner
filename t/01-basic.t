@@ -5,6 +5,7 @@ use lib 't/lib';
 
 use Test::Class::Runner::Test;
 use Test::Class::TestRunner;
+use Test::Class::Runner::Util qw(load_module);
 use Test::More;
 
 sub create_runner {
@@ -19,7 +20,7 @@ sub a_test_load_module :Test(2) {
 
     ok !exists $Test::Class::Runner::{'ExampleTest::'};
 
-    $runner->load_module('Test::Class::Runner::ExampleTest');
+    load_module('Test::Class::Runner::ExampleTest');
 
     ok exists $Test::Class::Runner::{'ExampleTest::'};
 }
@@ -45,8 +46,6 @@ sub test_run_test_method :Test(3) {
 
     my $test_class = 'Test::Class::Runner::ExampleTest';
     my $runner     = $self->create_runner;
-
-    $runner->load_module($test_class);
 
     my $results;
 
