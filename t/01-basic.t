@@ -4,6 +4,7 @@ use parent 'Test::Class';
 use lib 't/lib';
 
 use Test::Class::Runner::Test;
+use Test::Class::TestRunner;
 use Test::More;
 
 sub create_runner {
@@ -60,6 +61,23 @@ sub test_run_test_method :Test(3) {
     $results = $runner->run_test_method($test_class, 'test_three');
 
     ok $results->all_passed;
+}
+
+sub test_test_runner :Test(1) {
+    my ( $self ) = @_;
+
+    my $has_run = 0;
+
+    my $runner = Test::Class::TestRunner->new({
+        runner_class => 'Test::Class::Runner::Test',
+        post_run     => sub {
+            $has_run = 1;
+        },
+    });
+
+    $runner->run('Test::Class::Runner::ExampleTest');
+
+    ok $has_run;
 }
 
 __PACKAGE__->runtests;
