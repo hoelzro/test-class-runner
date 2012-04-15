@@ -69,9 +69,11 @@ sub test_test_runner :Test(1) {
     my $has_run = 0;
 
     my $runner = Test::Class::TestRunner->new({
-        runner_class => 'Test::Class::Runner::Test',
-        post_run     => sub {
-            $has_run = 1;
+        runner_class   => 'Test::Class::Runner::Test',
+        runner_options => {
+            post_run     => sub {
+                $has_run = 1;
+            },
         },
     });
 
