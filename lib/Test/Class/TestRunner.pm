@@ -13,6 +13,7 @@ sub new {
     my ( $class, $options ) = @_;
 
     return bless {
+        %$options
     }, $class;
 }
 
