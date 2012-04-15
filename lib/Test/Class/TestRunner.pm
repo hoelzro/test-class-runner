@@ -5,7 +5,7 @@ package Test::Class::TestRunner;
 use strict;
 use warnings;
 
-use Test::Class::Runner::Console;
+use Test::Class::Runner::Util qw(load_module);
 
 use namespace::clean;
 
@@ -20,8 +20,14 @@ sub new {
 sub _create_runner {
     my ( $self ) = @_;
 
-    # XXX hardcoded and optionless for now
-    return Test::Class::Runner::Console->new;
+    my $runner_class = $self->{'runner_class'}
+        || 'Test::Class::Runner::Console';
+
+    my $runner_options = $self->{'runner_options'} || {};
+
+    load_module($runner_class);
+
+    return $runner_class->new($runner_options);
 }
 
 sub run {
