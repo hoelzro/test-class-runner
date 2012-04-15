@@ -64,6 +64,8 @@ sub run_test_method {
         # XXX this is fragile
         my $builder = Test::Class->builder;
 
+        $builder->reset; # reset the current Test::Builder plan if we're being
+                         # tested
         $builder->output($write);
         $builder->failure_output($write);
         $builder->todo_output($write);
