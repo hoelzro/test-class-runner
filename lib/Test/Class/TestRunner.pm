@@ -5,6 +5,8 @@ package Test::Class::TestRunner;
 use strict;
 use warnings;
 
+use Test::Class::Runner; # XXX we need to make sure it's loaded so
+                         #     Test::Class works properly
 use Test::Class::Runner::Util qw(load_module);
 
 use namespace::clean;
