@@ -5,9 +5,31 @@ package Test::Class::TestRunner;
 use strict;
 use warnings;
 
+use Module::Find qw(usesub);
+
 use Test::Class::Runner; # XXX we need to make sure it's loaded so
                          #     Test::Class works properly
 use Test::Class::Runner::Util qw(load_module);
+
+sub _role_count {
+    my ( $plugin, $role_lookup ) = @_;
+
+    return scalar(grep {
+        $role_lookup->{$_}
+    } $plugin->roles);
+}
+
+sub _match_plugins_to_roles {
+    my ( $lhs, $rhs, $role_lookup ) = @_;
+
+    my $n_lhs_matches = _role_count($lhs, $role_lookup);
+    my $n_rhs_matches = _role_count($rhs, $role_lookup);
+
+    my $cmp = $n_lhs_matches <=> $n_rhs_matches;
+
+    return $cmp if $cmp;
+    return $lhs->precedence <=> $rhs->precedence;
+}
 
 use namespace::clean;
 
@@ -19,11 +41,43 @@ sub new {
     }, $class;
 }
 
+sub _get_runner_class_from_roles {
+    my ( $self ) = @_;
+
+    my $roles = $self->{'roles'};
+
+    my %role_lookup = map { $_ => 1 } @$roles;
+
+    my @plugins = usesub 'Test::Class::Runner';
+
+    @plugins = grep {
+        $_->isa('Test::Class::Runner') &&
+        _role_count($_, \%role_lookup) > 0
+    } @plugins;
+
+    return unless @plugins;
+
+    @plugins = reverse sort {
+        _match_plugins_to_roles($a, $b, \%role_lookup)
+    } @plugins;
+
+    return $plugins[0];
+}
+
 sub create_runner {
     my ( $self ) = @_;
 
-    my $runner_class = $self->{'runner_class'}
-        || 'Test::Class::Runner::Console';
+    my $runner_class;
+
+    if($self->{'roles'}) {
+        $runner_class = $self->_get_runner_class_from_roles;
+        return unless $runner_class;
+    } else {
+        $runner_class = $self->{'runner_class'}
+            || 'Console';
+
+        $runner_class = 'Test::Class::Runner::' . $runner_class;
+    }
 
     my $runner_options = $self->{'runner_options'} || {};
 
