@@ -80,6 +80,14 @@ sub get_test_metadata {
     return Test::Class::Runner::Metadata->new($test_module);
 }
 
+sub roles {
+    return;
+}
+
+sub precedence {
+    return 0;
+}
+
 sub _run_test_module {
     my ( $self, $test_module ) = @_;
 
