@@ -19,7 +19,7 @@ sub new {
     }, $class;
 }
 
-sub _create_runner {
+sub create_runner {
     my ( $self ) = @_;
 
     my $runner_class = $self->{'runner_class'}
@@ -35,7 +35,7 @@ sub _create_runner {
 sub run {
     my ( $self, $test_file_or_module ) = @_;
 
-    return $self->_create_runner->run($test_file_or_module);
+    return $self->create_runner->run($test_file_or_module);
 }
 
 1;
