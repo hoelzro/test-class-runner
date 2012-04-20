@@ -40,7 +40,7 @@ sub roles {
 
 __END__
 
-# ABSTRACT:
+# ABSTRACT: A test runner that outputs to the console
 
 =head1 SYNOPSIS
 
