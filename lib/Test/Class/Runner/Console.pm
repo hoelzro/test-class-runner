@@ -32,6 +32,10 @@ sub show_tests {
     }
 }
 
+sub roles {
+    return ( 'console' );
+}
+
 1;
 
 __END__
